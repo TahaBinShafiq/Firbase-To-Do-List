@@ -6,10 +6,10 @@ let taskId = 0
 
 
 document.querySelector("button").addEventListener("click", async () => {
-    const task = document.querySelector("input").value;
-    if (task.trim() !== "") {
+    const input = document.querySelector("input").value;
+    if (input.trim() !== "") {
         const docRef = await setDoc(doc(db, "task" , taskId.toString()), {
-            task: task,
+            task: input,
             createdAt: new Date().toISOString()
         });
         document.querySelector("input").value = "";
@@ -19,12 +19,13 @@ document.querySelector("button").addEventListener("click", async () => {
 
 
 async function showAllTasks() {
-    // const q = query(collection(db, "cities"), where("state", "==", "CA"));
-    // const unsubscribe = onSnapshot(q, (querySnapshot) => {
-    //     const cities = [];
-    //     querySnapshot.forEach((doc) => {
-    //         cities.push(doc.data().name);
-    //     });
-    //     console.log("Current cities in CA: ", cities.join(", "));
-    // });    
+    const q = query(collection(db, "task"));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const task = [];
+        querySnapshot.forEach((doc) => {
+            cities.push(doc.data().name);
+        });
+    });    
 }
+
+showAllTasks()
