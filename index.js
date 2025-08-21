@@ -1,26 +1,30 @@
 import { db } from "./config.js";
-import { collection, query, where, onSnapshot, ref } from "./firestore.js";
+import { collection, query, onSnapshot , setDoc , doc } from "./firestore-db.js";
 
 
+let taskId = 0
 
-const todoRef = ref(db, "todos");
 
-document.querySelector("button").addEventListener("click", () => {
+document.querySelector("button").addEventListener("click", async () => {
     const task = document.querySelector("input").value;
     if (task.trim() !== "") {
-        push(todoRef, {
+        const docRef = await setDoc(doc(db, "task" , taskId.toString()), {
             task: task,
-            createdAt: Date.now()   // 👈 local timestamp
+            createdAt: new Date().toISOString()
         });
         document.querySelector("input").value = "";
     }
+    taskId++;
 });
 
-const q = query(collection(db, "cities"), where("state", "==", "CA"));
-const unsubscribe = onSnapshot(q, (querySnapshot) => {
-    const cities = [];
-    querySnapshot.forEach((doc) => {
-        cities.push(doc.data().name);
-    });
-    console.log("Current cities in CA: ", cities.join(", "));
-});
+
+async function showAllTasks() {
+    // const q = query(collection(db, "cities"), where("state", "==", "CA"));
+    // const unsubscribe = onSnapshot(q, (querySnapshot) => {
+    //     const cities = [];
+    //     querySnapshot.forEach((doc) => {
+    //         cities.push(doc.data().name);
+    //     });
+    //     console.log("Current cities in CA: ", cities.join(", "));
+    // });    
+}
