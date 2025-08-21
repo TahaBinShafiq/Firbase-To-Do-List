@@ -1,9 +1,10 @@
+import { collection, query, where, onSnapshot } from "./firestore.js";
 
-
-
-
-onSnapshot(collection(db, "todos"), (snapshot) => {
-  snapshot.forEach(doc => {
-    console.log(doc.data());
+const q = query(collection(db, "cities"), where("state", "==", "CA"));
+const unsubscribe = onSnapshot(q, (querySnapshot) => {
+  const cities = [];
+  querySnapshot.forEach((doc) => {
+      cities.push(doc.data().name);
   });
+  console.log("Current cities in CA: ", cities.join(", "));
 });
