@@ -1,14 +1,12 @@
 import { db } from "./config.js";
-import { collection, query, onSnapshot, setDoc, doc } from "./firestore-db.js";
+import { collection, query, onSnapshot, addDoc } from "./firestore-db.js";
 
 
 let taskId = 0
-
-
 document.querySelector("button").addEventListener("click", async () => {
     const input = document.querySelector("input").value;
     if (input.trim() !== "") {
-        const docRef = await setDoc(doc(db, "tasks", taskId.toString()), {
+        const docRef = await addDoc(collection(db, "tasks"), {
             task: input,
             createdAt: new Date().toISOString()
         });
