@@ -1,5 +1,5 @@
 import { db } from "./config.js";
-import { collection, query, onSnapshot, addDoc, getDocs, updateDoc, doc } from "./firestore-db.js";
+import { collection, query, onSnapshot, addDoc, getDocs, updateDoc, doc, orderBy } from "./firestore-db.js";
 
 
 const input = document.querySelector("input");
@@ -64,17 +64,20 @@ mainBtn.addEventListener("click", async () => {
 
 });
 
+let list = document.getElementById("list")
 
+if (list.scrollHeight > 500) {
+    list.style.maxHeight = "300px";   
+    list.style.overflowY = "auto";   
+}
 
 async function showAllTasks() {
-    const q = query(collection(db, "tasks"));
+    const q = query(collection(db, "tasks"), orderBy("createdAt", "desc"));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
         const task = [];
         list.innerHTML = ""
         querySnapshot.forEach((doc) => {
             let { task } = doc.data();
-            console.log(doc.id)
-            let list = document.getElementById("list")
             if (list) {
                 list.innerHTML += `<li>
                 <p class="task-title" title="Sample Task">${task}</p>
