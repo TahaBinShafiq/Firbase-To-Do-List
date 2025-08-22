@@ -1,5 +1,5 @@
 import { db } from "./config.js";
-import { collection, query, onSnapshot, addDoc, getDocs } from "./firestore-db.js";
+import { collection, query, onSnapshot, addDoc, getDocs, updateDoc } from "./firestore-db.js";
 
 
 const input = document.querySelector("input");
@@ -8,7 +8,7 @@ document.querySelector("button").addEventListener("click", async () => {
         input.style.border = "2px solid red"
         return;
     }
-    
+
     const allData = await getDocs(collection(db, "tasks"));
 
     let alreadyExist = false;
@@ -23,29 +23,33 @@ document.querySelector("button").addEventListener("click", async () => {
         input.style.border = "2px solid orange";
         input.value = ""
         return;
-        
+
     }
 
     const docRef = await addDoc(collection(db, "tasks"), {
         task: input.value,
         createdAt: new Date().toISOString(),
-       
+
     });
     input.value = "";
 
 });
 
-    async function showAllTasks() {
-        const q = query(collection(db, "tasks"));
-        const unsubscribe = onSnapshot(q, (querySnapshot) => {
-            const task = [];
-            list.innerHTML = ""
-            querySnapshot.forEach((doc) => {
-                let { task } = doc.data();
-                console.log(doc.id)
-                let list = document.getElementById("list")
-                if (list) {
-                    list.innerHTML += `<li>
+let editId = null;
+
+
+
+async function showAllTasks() {
+    const q = query(collection(db, "tasks"));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const task = [];
+        list.innerHTML = ""
+        querySnapshot.forEach((doc) => {
+            let { task } = doc.data();
+            console.log(doc.id)
+            let list = document.getElementById("list")
+            if (list) {
+                list.innerHTML += `<li>
                 <p class="task-title" title="Sample Task">${task}</p>
                 <div class="actions">
                   <!-- Edit Button -->
@@ -67,17 +71,37 @@ document.querySelector("button").addEventListener("click", async () => {
                   </button>
                 </div>
               </li>`
+            }
+
+            document.querySelectorAll(".edit").forEach((editBtn) => {
+                editBtn.onclick = (e) => {
+                    let id = editBtn.getAttribute("data-id")
+                    let taskElement = editBtn.closest("li").querySelector(".task-title");
+                    input.value = taskElement.textContent;
+                    editId = id
+                    document.querySelector("button").textContent = "Update";
+                }
+            })
+
+            document.querySelector("button").addEventListener("click", async () => {
+                if (input.value.trim() === "") {
+                    input.style.border = "2px solid red";
+                    return;
                 }
 
-                document.querySelectorAll(".edit").forEach((editBtn) =>{
-                    editBtn.addEventListener("click" , () =>{
-                        let id = editBtn.getAttribute("data-id")
-                        console.log(id)
-                    })
-                })
-            });
+                if (editId) {
+                    await updateDoc(doc(db, "tasks", editId), {
+                        task: input.value
+                    });
+                    editId = null;
+                    document.querySelector("button").textContent = "Add";
+                    console.log(editId)
+                    console.log(doc.data());
+                }
+            })
         });
+    });
 
-    }
+}
 
-    showAllTasks()
+showAllTasks()
