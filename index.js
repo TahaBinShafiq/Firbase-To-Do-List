@@ -1,34 +1,49 @@
 import { db } from "./config.js";
-import { collection, query, onSnapshot, addDoc } from "./firestore-db.js";
+import { collection, query, onSnapshot, addDoc, getDocs } from "./firestore-db.js";
 
 
+const input = document.querySelector("input");
 document.querySelector("button").addEventListener("click", async () => {
-    const input = document.querySelector("input");
-    if(input.value.trim() === ""){
+    if (input.value.trim() === "") {
         input.style.border = "2px solid red"
-    }else{
-    if (input.value.trim() !== "") {
-        const docRef = await addDoc(collection(db, "tasks"), {
-            task: input.value,
-            createdAt: new Date().toISOString()
-        });
-        document.querySelector("input").value = "";
+        return;
     }
-}
+    
+    const allData = await getDocs(collection(db, "tasks"));
+    
+    let alreadyExist = false;
+    allData.forEach((doc) => {
+        if (doc.data().task.toLowerCase() === input.value.toLowerCase()) {
+            alreadyExist = true
+        }
+    })
+
+    if (alreadyExist === true) {
+        alert("This value already exists ❌");
+        input.style.border = "2px solid orange";
+        input.value = ""
+        return;
+        
+    }
+
+    const docRef = await addDoc(collection(db, "tasks"), {
+        task: input.value,
+        createdAt: new Date().toISOString()
+    });
+    input.value = "";
+
 });
 
-
-
-async function showAllTasks() {
-    const q = query(collection(db, "tasks"));
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        const task = [];
-        list.innerHTML = ""
-        querySnapshot.forEach((doc) => {
-            let { task } = doc.data();
-            let list = document.getElementById("list")
-            if(list){
-                list.innerHTML += `<li>
+    async function showAllTasks() {
+        const q = query(collection(db, "tasks"));
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            const task = [];
+            list.innerHTML = ""
+            querySnapshot.forEach((doc) => {
+                let { task } = doc.data();
+                let list = document.getElementById("list")
+                if (list) {
+                    list.innerHTML += `<li>
                 <p class="task-title" title="Sample Task">${task}</p>
                 <div class="actions">
                   <!-- Edit Button -->
@@ -50,10 +65,10 @@ async function showAllTasks() {
                   </button>
                 </div>
               </li>`
-            }
-            
-        });
-    });
-}
+                }
 
-showAllTasks()
+            });
+        });
+    }
+
+    showAllTasks()
