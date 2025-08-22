@@ -69,8 +69,15 @@ document.querySelector("button").addEventListener("click", async () => {
               </li>`
                 }
 
+                document.querySelectorAll(".edit").forEach((editBtn) =>{
+                    editBtn.addEventListener("click" , () =>{
+                        let id = editBtn.getAttribute("data-id")
+                        console.log(id)
+                    })
+                })
             });
         });
+
     }
 
     showAllTasks()
