@@ -330,7 +330,7 @@
          -webkit-background-clip: text;
          -webkit-text-fill-color: transparent;
          animation: glitter 3s infinite linear;
-         position:absolute;
+         position:fixed;
          bottom: 15px;
          left: auto;
          right: auto;
