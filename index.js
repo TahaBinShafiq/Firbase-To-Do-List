@@ -10,7 +10,7 @@ document.querySelector("button").addEventListener("click", async () => {
     }
     
     const allData = await getDocs(collection(db, "tasks"));
-    
+
     let alreadyExist = false;
     allData.forEach((doc) => {
         if (doc.data().task.toLowerCase() === input.value.toLowerCase()) {
@@ -28,7 +28,8 @@ document.querySelector("button").addEventListener("click", async () => {
 
     const docRef = await addDoc(collection(db, "tasks"), {
         task: input.value,
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
+       
     });
     input.value = "";
 
@@ -41,13 +42,14 @@ document.querySelector("button").addEventListener("click", async () => {
             list.innerHTML = ""
             querySnapshot.forEach((doc) => {
                 let { task } = doc.data();
+                console.log(doc.id)
                 let list = document.getElementById("list")
                 if (list) {
                     list.innerHTML += `<li>
                 <p class="task-title" title="Sample Task">${task}</p>
                 <div class="actions">
                   <!-- Edit Button -->
-                  <button class="icon-btn edit" type="button" aria-label="Edit task" title="Edit">
+                  <button class="icon-btn edit" type="button" data-id="${doc.id}" aria-label="Edit task" title="Edit">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
                       aria-hidden="true">
                       <path d="M15.232 5.232a2.5 2.5 0 1 1 3.536 3.536L8.75 18.786 4 20l1.214-4.75 10.018-10.018z" />
