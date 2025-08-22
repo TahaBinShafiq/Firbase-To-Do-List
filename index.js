@@ -1,15 +1,44 @@
 import { db } from "./config.js";
-import { collection, query, onSnapshot, addDoc, getDocs, updateDoc } from "./firestore-db.js";
+import { collection, query, onSnapshot, addDoc, getDocs, updateDoc, doc } from "./firestore-db.js";
 
 
 const input = document.querySelector("input");
-document.querySelector("button").addEventListener("click", async () => {
+const mainBtn = document.querySelector("button");
+let editId = null;
+
+mainBtn.addEventListener("click", async () => {
     if (input.value.trim() === "") {
         input.style.border = "2px solid red"
         return;
     }
 
     const allData = await getDocs(collection(db, "tasks"));
+    // Edit Task 
+    if (editId) {
+        let alreadyExist = false;
+        allData.forEach((doc) => {
+            if (doc.data().task.toLowerCase() === input.value.toLowerCase()) {
+                alreadyExist = true
+            }
+        })
+
+        if (alreadyExist === true) {
+            alert("This value already exists ❌");
+            input.style.border = "2px solid orange";
+            input.value = ""
+            return;
+
+        }
+
+        await updateDoc(doc(db, "tasks", editId), {
+            task: input.value
+        })
+        editId = null;
+        mainBtn.textContent = "Add";
+        input.value = "";
+        return;
+    };
+
 
     let alreadyExist = false;
     allData.forEach((doc) => {
@@ -34,8 +63,6 @@ document.querySelector("button").addEventListener("click", async () => {
     input.value = "";
 
 });
-
-let editId = null;
 
 
 
@@ -79,26 +106,9 @@ async function showAllTasks() {
                     let taskElement = editBtn.closest("li").querySelector(".task-title");
                     input.value = taskElement.textContent;
                     editId = id
-                    document.querySelector("button").textContent = "Update";
+                    mainBtn.textContent = "Update";
                 }
-            })
-
-            document.querySelector("button").addEventListener("click", async () => {
-                if (input.value.trim() === "") {
-                    input.style.border = "2px solid red";
-                    return;
-                }
-
-                if (editId) {
-                    await updateDoc(doc(db, "tasks", editId), {
-                        task: input.value
-                    });
-                    editId = null;
-                    document.querySelector("button").textContent = "Add";
-                    console.log(editId)
-                    console.log(doc.data());
-                }
-            })
+            });
         });
     });
 
