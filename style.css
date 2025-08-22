@@ -1,0 +1,354 @@
+ @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+ * {
+     margin: 0;
+     padding: 0;
+     box-sizing: border-box;
+     font-family: 'Poppins', sans-serif
+ }
+
+ .my-name {
+     font-family: 'Dancing Script', cursive;
+     font-size: 28px;
+     font-weight: bold;
+     text-align: center;
+     position: relative;
+     display: inline-block;
+
+     /* Glitter text */
+     background: linear-gradient(90deg, #fff, #d4d4d4, #fff, #e5e5e5);
+     background-size: 400% 400%;
+     -webkit-background-clip: text;
+     -webkit-text-fill-color: transparent;
+     animation: glitter 3s infinite linear;
+     position: fixed;
+     bottom: 15px;
+     right: 20px;
+ }
+
+ /* Animated underline */
+ .my-name::after {
+     content: "";
+     position: absolute;
+     left: 0;
+     bottom: -6px;
+     width: 100%;
+     height: 3px;
+     background: linear-gradient(90deg, #001c68, #ffffff, #f9f9f9);
+     background-size: 200% 100%;
+     animation: underline 2s infinite linear;
+     border-radius: 5px;
+ }
+
+ @keyframes glitter {
+     0% {
+         background-position: 0% 50%;
+     }
+
+     100% {
+         background-position: 100% 50%;
+     }
+ }
+
+ @keyframes underline {
+     0% {
+         background-position: 0% 50%;
+     }
+
+     100% {
+         background-position: 200% 50%;
+     }
+ }
+
+ body {
+     background: linear-gradient(135deg, #2c5364, #203a43, #0f2027);
+     min-height: 100vh;
+     display: flex;
+     align-items: baseline;
+     justify-content: center;
+     padding: 20px;
+ }
+
+ .todo-container {
+     background: #fff;
+     width: 420px;
+     max-width: 95vw;
+     padding: 26px 30px;
+     border-radius: 20px;
+     box-shadow: 0 8px 25px rgba(0, 0, 0, .2);
+     animation: fadeIn 1.2s ease;
+     min-height: 270px;
+     max-height: 100vh;
+     overflow: hidden;
+ }
+
+ .todo-container h1 {
+     text-align: center;
+     font-size: 1.8rem;
+     color: #152931;
+     margin-bottom: 20px;
+     position: relative;
+
+ }
+
+ .todo-container h1::after {
+     content: "";
+     width: 150px;
+     height: 3px;
+     background: #315b6c;
+     display: block;
+     margin: 8px auto 0;
+     border-radius: 2px;
+     animation: slideIn 1.2s ease;
+ }
+
+ .input-section {
+     display: flex;
+     gap: 10px;
+     margin-bottom: 18px
+ }
+
+ .input-section input {
+     flex: 1;
+     padding: 11px 12px;
+     border-radius: 10px;
+     border: 2px solid #ddd;
+     outline: none;
+     transition: .3s;
+ }
+
+ .input-section input:focus {
+     border-color: #152931;
+     box-shadow: 0 0 8px #152931
+ }
+
+ .input-section button {
+     padding: 11px 16px;
+     background: #152931;
+     color: #fff;
+     border: none;
+     border-radius: 10px;
+     cursor: pointer;
+     transition: .25s;
+ }
+
+ .input-section button:hover {
+     transform: translateY(-1px);
+     filter: brightness(.95)
+ }
+
+ ul {
+     list-style: none;
+     max-height: 370px;
+     overflow-y: auto;
+ }
+
+ /* list item */
+ li {
+     background: #f7f7fb;
+     border: 1px solid #eee;
+     border-radius: 12px;
+     margin-bottom: 10px;
+     padding: 12px 14px;
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     gap: 12px;
+     animation: popIn .5s ease;
+ }
+
+ .task-title {
+     color: #333;
+     font-size: .98rem;
+     flex: 1;
+     white-space: nowrap;
+     overflow: hidden;
+     text-overflow: ellipsis;
+ }
+
+ /* action buttons */
+ .actions {
+     display: flex;
+     align-items: center;
+     gap: 8px
+ }
+
+ .icon-btn {
+     display: inline-flex;
+     align-items: center;
+     justify-content: center;
+     gap: 6px;
+     padding: 8px 10px;
+     border-radius: 10px;
+     border: 1px solid #eaeaea;
+     background: #fff;
+     cursor: pointer;
+     transition: .2s;
+     user-select: none;
+     text-decoration: none;
+ }
+
+ .icon-btn svg {
+     width: 18px;
+     height: 18px;
+     stroke-width: 1.8
+ }
+
+ .icon-btn span {
+     font-size: .86rem
+ }
+
+ .icon-btn:focus {
+     outline: 3px solid #d9d2ff;
+     outline-offset: 2px
+ }
+
+ .icon-btn.edit {
+     color: #2b8a3e
+ }
+
+ .icon-btn.edit:hover {
+     background: #e9f7ef;
+     border-color: #cfe9d7;
+     transform: translateY(-1px)
+ }
+
+ .icon-btn.delete {
+     color: #e03131
+ }
+
+ .icon-btn.delete:hover {
+     background: #fff1f1;
+     border-color: #f0caca;
+     transform: translateY(-1px)
+ }
+
+ /* subtle icon wiggle on hover */
+ .icon-btn:hover svg {
+     transform: translateY(-1px);
+     transition: .2s
+ }
+
+ /* Animations */
+ @keyframes fadeIn {
+     from {
+         opacity: 0;
+         transform: translateY(-12px)
+     }
+
+     to {
+         opacity: 1;
+         transform: translateY(0)
+     }
+ }
+
+ @keyframes slideIn {
+     from {
+         width: 0
+     }
+
+     to {
+         width: 110px
+     }
+ }
+
+ @keyframes popIn {
+     from {
+         transform: scale(.98);
+         opacity: 0
+     }
+
+     to {
+         transform: scale(1);
+         opacity: 1
+     }
+
+ }
+
+
+
+ @media screen and (max-width:600px) {
+
+     body {
+         background: white;
+         min-height: 100vh;
+         display: flex;
+         align-items: none;
+         justify-content: center;
+         padding: 0px;
+         margin: 0px;
+         padding: 0px;
+     }
+
+     .todo-container {
+         width: 100%;
+         height: 100vh;
+         border-radius: 0px;
+         box-shadow: none;
+         padding: 10px;
+         display: flex;
+         flex-direction: column;
+         justify-content: center;
+     }
+
+     ul {
+         border: 1px solid gainsboro;
+         padding: 10px;
+         border-radius: 10px;
+         max-height: 70%;
+
+     }
+
+     .input-section input:focus-within {
+         box-shadow: 1px 1px 5px #d8d8d8;
+         border: 2px solid grey;
+     }
+
+     .todo-container h1::after {
+         content: "";
+         width: 95%;
+         height: 3px;
+         background: #315b6c;
+         display: block;
+         margin: 8px auto 0;
+         border-radius: 2px;
+         animation: slideIn 1.2s ease;
+     }
+
+
+     .my-name {
+         font-family: 'Dancing Script', cursive;
+         font-size: 28px;
+         font-weight: bold;
+         text-align: center;
+         position: relative;
+         display: inline-block;
+         /* Glitter text */
+         background: linear-gradient(90deg, #000000, #c2c2c2, #001c68, #2c3e8f);
+         background-size: 400% 400%;
+         -webkit-background-clip: text;
+         -webkit-text-fill-color: transparent;
+         animation: glitter 3s infinite linear;
+         position: fixed;
+         bottom: 15px;
+         left: auto;
+         right: auto;
+         color: #001c68;
+
+     }
+
+
+     .my-name::after {
+         content: "";
+         position: absolute;
+         left: 0;
+         bottom: -6px;
+         width: 100%;
+         height: 3px;
+         background: linear-gradient(90deg, #001c68, #ffffff, #f9f9f9);
+         background-size: 200% 100%;
+         animation: underline 2s infinite linear;
+         border-radius: 5px;
+     }
+
+ }

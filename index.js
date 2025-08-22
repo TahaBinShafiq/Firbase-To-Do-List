@@ -1,5 +1,5 @@
 import { db } from "./config.js";
-import { collection, query, onSnapshot, addDoc, getDocs, updateDoc, doc, orderBy } from "./firestore-db.js";
+import { collection, query, onSnapshot, addDoc, getDocs, updateDoc, doc, orderBy, deleteDoc } from "./firestore-db.js";
 
 
 const input = document.querySelector("input");
@@ -67,8 +67,8 @@ mainBtn.addEventListener("click", async () => {
 let list = document.getElementById("list")
 
 if (list.scrollHeight > 500) {
-    list.style.maxHeight = "300px";   
-    list.style.overflowY = "auto";   
+    list.style.maxHeight = "300px";
+    list.style.overflowY = "auto";
 }
 
 async function showAllTasks() {
@@ -76,14 +76,14 @@ async function showAllTasks() {
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
         const task = [];
         list.innerHTML = ""
-        querySnapshot.forEach((doc) => {
-            let { task } = doc.data();
+        querySnapshot.forEach((docSnap) => {
+            let { task } = docSnap.data();
             if (list) {
                 list.innerHTML += `<li>
                 <p class="task-title" title="Sample Task">${task}</p>
                 <div class="actions">
                   <!-- Edit Button -->
-                  <button class="icon-btn edit" type="button" data-id="${doc.id}" aria-label="Edit task" title="Edit">
+                  <button class="icon-btn edit" type="button" data-id="${docSnap.id}" aria-label="Edit task" title="Edit">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
                       aria-hidden="true">
                       <path d="M15.232 5.232a2.5 2.5 0 1 1 3.536 3.536L8.75 18.786 4 20l1.214-4.75 10.018-10.018z" />
@@ -92,7 +92,7 @@ async function showAllTasks() {
                   </button>
         
                   <!-- Delete Button -->
-                  <button class="icon-btn delete" type="button" aria-label="Delete task" title="Delete">
+                  <button class="icon-btn delete" type="button" data-id="${docSnap.id}" aria-label="Delete task" title="Delete">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
                       aria-hidden="true">
                       <path d="M3 6h18M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2m-1 0v14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V6h10z" />
@@ -112,6 +112,14 @@ async function showAllTasks() {
                     mainBtn.textContent = "Update";
                 }
             });
+
+            document.querySelectorAll(".delete").forEach((delBtn) => {
+                delBtn.onclick = async () => {
+                    let id = delBtn.getAttribute("data-id");
+                    await deleteDoc(doc(db, "tasks", id));
+                }
+
+            })
         });
     });
 
