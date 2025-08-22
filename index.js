@@ -2,18 +2,21 @@ import { db } from "./config.js";
 import { collection, query, onSnapshot, addDoc } from "./firestore-db.js";
 
 
-let taskId = 0
 document.querySelector("button").addEventListener("click", async () => {
-    const input = document.querySelector("input").value;
-    if (input.trim() !== "") {
+    const input = document.querySelector("input");
+    if(input.value.trim() === ""){
+        input.style.border = "2px solid red"
+    }else{
+    if (input.value.trim() !== "") {
         const docRef = await addDoc(collection(db, "tasks"), {
-            task: input,
+            task: input.value,
             createdAt: new Date().toISOString()
         });
         document.querySelector("input").value = "";
     }
-    taskId++;
+}
 });
+
 
 
 async function showAllTasks() {
