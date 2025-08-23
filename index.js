@@ -19,6 +19,7 @@ mainBtn.addEventListener("click", async () => {
         allData.forEach((doc) => {
             if (doc.data().task.toLowerCase() === input.value.toLowerCase()) {
                 alreadyExist = true
+                return;
             }
         })
 
@@ -27,7 +28,7 @@ mainBtn.addEventListener("click", async () => {
                 icon: "error",
                 title: "Oops...",
                 text: "This value already exists",
-                time: 2000,
+                timer: 2000,
                 showConfirmButton: false,
                 timerProgressBar: true
             });
